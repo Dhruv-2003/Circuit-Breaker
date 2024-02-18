@@ -30,16 +30,16 @@ import PdfViewer from "@/components/pdf-viewer";
 
 const tokens = [
   {
-    name: "Token 1",
-    value: "token1",
+    name: "TEST",
+    value: "TEST",
   },
   {
-    name: "Token 2",
-    value: "token2",
+    name: "USDC",
+    value: "USDC",
   },
   {
-    name: "Token 3",
-    value: "token3",
+    name: "DAI",
+    value: "DAI",
   },
 ];
 
@@ -63,6 +63,7 @@ const steps: Steps[] = [
 ];
 
 export default function AllSteps() {
+  const [pdfURL, setPdfURL] = useState<string>();
   const [activeStep, setActiveStep] = useState(0);
   const [fileData, setFileData] = useState<string | ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState<string>("");
@@ -122,6 +123,38 @@ export default function AllSteps() {
     }
   };
 
+  const extractEmailsFromUrl = async (url: string) => {
+    try {
+      const data = {
+        url,
+      };
+      const res = await fetch("/api/pdf/getEmails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      console.log(res);
+      const newData = await res.json();
+      console.log(newData);
+      const extractedEmails = newData.data;
+      console.log(extractedEmails);
+      setEmails(extractedEmails);
+      // setEmailPercentages(
+      //   extractedEmails.map((email) => ({ email, percentage: 100 }))
+      // );
+      const percentage =
+        extractedEmails.length > 1 ? 100 / extractedEmails.length : 100;
+      setEmailPercentages(
+        extractedEmails.map((email) => ({ email, percentage }))
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePercentageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -134,7 +167,7 @@ export default function AllSteps() {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const moveToStep2 = () => {
-    if (!fileData) return toast.error("No file selected");
+    // if (!fileData) return toast.error("No file selected");
     setActiveStep(activeStep + 1);
   };
 
@@ -188,8 +221,14 @@ export default function AllSteps() {
                       type="text"
                       placeholder="Enter PDF or Arvix link"
                       className=" text-black"
+                      onChange={(e) => setPdfURL(e.target.value)}
                     />
-                    <Button variant={"app"}>Get Emails</Button>
+                    <Button
+                      onClick={() => extractEmailsFromUrl(pdfURL)}
+                      variant={"app"}
+                    >
+                      Get Emails
+                    </Button>
                   </div>
                 </Label>
                 <div className=" self-center text-lg font-semibold text-neutral-300">
