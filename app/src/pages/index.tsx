@@ -422,14 +422,34 @@ export default function AllSteps() {
                         <div>gets</div>
                         <Input
                           type="number"
-                          value={emailPercentages[index]?.percentage || ""}
+                          value={
+                            (emailPercentages[index]?.percentage *
+                              donationAmount) /
+                              100 || ""
+                          }
                           onChange={(e) => handlePercentageChange(e, index)}
                           placeholder="e.g: 40"
                           disabled
                           className=" w-32 text-black"
                         />
-                        <div className=" min-w-fit"> % of the total funds</div>
+                        <div className=" min-w-fit">{selectedToken}</div>
                       </div>
+                      <a
+                        href={`https://mail.google.com/mail/?&view=cm&fs=1&to=${
+                          email.split("@")[0]
+                        }%40${
+                          email.split("@")[1]
+                        }&cc=sepolia%40sendeth.org&su=Send%20${
+                          (emailPercentages[index]?.percentage *
+                            donationAmount) /
+                          100
+                        }%20${selectedToken}%20to%20${email.split("@")[0]}%40${
+                          email.split("@")[1]
+                        }&body=${`Thank%20You%20for%20your%20Contribution%20on%20the%20research%20paper%20`}${pdfURL}%0A%0AYou%20are%20sending%20with%20Email%20Wallet.%0A%0A%E2%9D%97%20This%20transaction%20is%20triggered%20when%20you%20send%20this%20email.%20Don%27t%20edit%20the%20cc%3A%20or%20subject%3A%20fields%2C%20or%20else%20it%20will%20fail!%0A%0A%F0%9F%93%A4%20sendeth.org%20(cc%27d)%20relays%20your%20email%20on%20Sepolia%20testnet%20to%20transfer%20the%20funds.%20Expect%20a%20confirmation%20email%20when%20finished.%0A%0A%F0%9F%93%96%20Read%20more%20on%20our%20site%2C%20docs%2C%20or%20code%20at%20https%3A%2F%2Femailwallet.org`}
+                        className=" self-end ml-auto"
+                      >
+                        Send Email
+                      </a>
                       <Button variant={"app"} className=" self-end ml-auto">
                         Send Email
                       </Button>
