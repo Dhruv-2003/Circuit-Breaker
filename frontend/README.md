@@ -1,3 +1,25 @@
+## Steps
+
+- User enters the source, arxiv , pdf
+- We scan the PDF , for emails in the whole research
+- We display them for the donor and they can select the % of the funds they want to distribute
+- Then Donor can select the amounts to pay
+- For these emails , we create emailWallets , or put those funds in Unclaimed status for them
+- The receiver gets an email regarding the payment
+- And the payment is complete
+
+### Choice 1
+
+-> User connects their EOA , with some funds in it
+-> We then create a Batched Transaction to register Unclaimed funds for an address , after preparing all the respective inputs for it
+-> Do a Batch a tx directly from the wallet to perform this
+
+## Choice 2
+
+-> User has this email wallet , which is already created
+-> Then User does the tx by sending multiple emails to these receiver with cc as sepolia@sendeth.org
+-> And boom it's done.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
