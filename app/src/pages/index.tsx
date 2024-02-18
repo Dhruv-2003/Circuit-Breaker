@@ -9,17 +9,15 @@ import {
   LucideIcon,
   Upload,
 } from "lucide-react";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useDropzone } from "react-dropzone";
 import { getDocument, PDFDocumentProxy } from "pdfjs-dist";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Card } from "./ui/card";
-// import PdfViewer from "./pdf-viewer";
-// const PdfViewer = lazy(() => import("./pdf-viewer"));
+import { Card } from "@/components/ui/card";
 
 import {
   Select,
@@ -28,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import PdfViewer from "@/components/pdf-viewer";
 
 const tokens = [
   {
@@ -66,6 +65,7 @@ const steps: Steps[] = [
 export default function AllSteps() {
   const [activeStep, setActiveStep] = useState(0);
   const [fileData, setFileData] = useState<string | ArrayBuffer | null>(null);
+  const [fileName, setFileName] = useState<string>("");
   const [emails, setEmails] = useState<string[]>([]);
   const [donationAmount, setDonationAmount] = useState<number>(0);
   const [emailPercentages, setEmailPercentages] = useState<
@@ -146,7 +146,7 @@ export default function AllSteps() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-screen  py-20 flex items-start justify-center">
       <div className="w-7/12 mx-auto space-y-8">
         <ol className="flex items-center justify-between w-full text-base font-medium text-center">
           {steps.map(({ icon: Icon, title }, idx) => (
@@ -183,7 +183,14 @@ export default function AllSteps() {
               <>
                 <Label className="w-full space-y-2">
                   <div className="text-base">Enter file URL below</div>
-                  <Input type="text" placeholder="Enter PDF or Arvix link" />
+                  <div className=" flex items-center gap-3">
+                    <Input
+                      type="text"
+                      placeholder="Enter PDF or Arvix link"
+                      className=" text-black"
+                    />
+                    <Button variant={"app"}>Get Emails</Button>
+                  </div>
                 </Label>
                 <div className=" self-center text-lg font-semibold text-neutral-300">
                   or
@@ -197,21 +204,22 @@ export default function AllSteps() {
                     <Upload className="size-8" />
                     <span className="text-sm mt-2">Drop file here</span>
                   </div>
-                  <input {...getInputProps()} className="hidden" />
+                  <Input {...getInputProps()} className="hidden" />
                 </div>
               </>
             )}
             {fileData && (
               <div className=" space-y-3 w-full">
                 <div className=" text-lg font-semibold tracking-wide">
-                  View PDF
+                  Selected File
                 </div>
-                <div className="w-full">
+                <Card className="w-full break-all">
+                  {fileName}
                   {/* <Suspense fallback={<div>Loading...</div>}>
                     <PdfViewer url={fileData} />
                   </Suspense> */}
                   {/* <PdfViewer url={fileData} /> */}
-                </div>
+                </Card>
               </div>
             )}
             {!!emails.length && (
@@ -330,7 +338,7 @@ export default function AllSteps() {
                   </div>
                   <Input
                     placeholder="e.g: 100"
-                    className=" border-2 border-black"
+                    className=" border-2 border-black text-black"
                     value={donationAmount}
                     onChange={(e) => setDonationAmount(Number(e.target.value))}
                   />
