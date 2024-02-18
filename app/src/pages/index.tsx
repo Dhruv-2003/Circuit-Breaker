@@ -68,6 +68,7 @@ export default function AllSteps() {
   const [fileData, setFileData] = useState<string | ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [emails, setEmails] = useState<string[]>([]);
+  const [selectedToken, setSelectedToken] = useState<string>("");
   const [donationAmount, setDonationAmount] = useState<number>(0);
   const [emailPercentages, setEmailPercentages] = useState<
     { email: string; percentage: number }[]
@@ -77,6 +78,10 @@ export default function AllSteps() {
     if (!fileData) return toast.error("No file selected");
     setActiveStep(idx);
   };
+
+  function handleTokenChange(token: string) {
+    setSelectedToken(token);
+  }
 
   const onDrop = (acceptedFiles: File[]) => {
     const reader = new FileReader();
@@ -148,7 +153,7 @@ export default function AllSteps() {
       const percentage =
         extractedEmails.length > 1 ? 100 / extractedEmails.length : 100;
       setEmailPercentages(
-        extractedEmails.map((email) => ({ email, percentage }))
+        extractedEmails.map((email: string) => ({ email, percentage }))
       );
     } catch (error) {
       console.log(error);
@@ -172,8 +177,8 @@ export default function AllSteps() {
   };
 
   const moveToStep3 = () => {
-    if (!donationAmount) {
-      return toast.error("Please enter donation amount");
+    if (!donationAmount && !selectedToken) {
+      return toast.error("Please enter donation amount & token");
     }
     setActiveStep(activeStep + 1);
   };
@@ -224,7 +229,7 @@ export default function AllSteps() {
                       onChange={(e) => setPdfURL(e.target.value)}
                     />
                     <Button
-                      onClick={() => extractEmailsFromUrl(pdfURL)}
+                      onClick={() => extractEmailsFromUrl(pdfURL as string)}
                       variant={"app"}
                     >
                       Get Emails
@@ -345,6 +350,7 @@ export default function AllSteps() {
                           value={emailPercentages[index]?.percentage || ""}
                           onChange={(e) => handlePercentageChange(e, index)}
                           placeholder="e.g: 40"
+                          disabled
                           className=" w-32 text-black"
                         />
                         <div className=" min-w-fit">% of the funds</div>
@@ -356,7 +362,10 @@ export default function AllSteps() {
             )}
 
             <Card className="space-y-5 w-full p-8 rounded-md border-2 border-indigo-900 bg-[#f9fbfa]">
-              <Select>
+              <Select
+                value={selectedToken}
+                onValueChange={(value) => setSelectedToken(value)}
+              >
                 <SelectTrigger className="border-2 border-black">
                   <SelectValue placeholder="Select Token" />
                 </SelectTrigger>
@@ -397,7 +406,39 @@ export default function AllSteps() {
         {/* step 3 */}
         {activeStep === 2 && (
           <div className="flex items-start justify-center flex-col gap-5 bg-transparent border border-white p-10">
-            <CheckCircle2 className=" size-20 text-[#BAEF58] mx-auto" />
+            {!!emails.length && (
+              <div className=" w-full space-y-2">
+                <div className=" text-lg font-semibold tracking-wide">
+                  Emails extracted from PDF:
+                </div>
+                <div className=" space-y-3 w-full">
+                  {emails.map((email, index) => (
+                    <div
+                      key={index}
+                      className=" flex items-center justify-between w-full gap-3"
+                    >
+                      <div className=" flex items-center gap-3">
+                        <div>{email}</div>
+                        <div>gets</div>
+                        <Input
+                          type="number"
+                          value={emailPercentages[index]?.percentage || ""}
+                          onChange={(e) => handlePercentageChange(e, index)}
+                          placeholder="e.g: 40"
+                          disabled
+                          className=" w-32 text-black"
+                        />
+                        <div className=" min-w-fit"> % of the total funds</div>
+                      </div>
+                      <Button variant={"app"} className=" self-end ml-auto">
+                        Send Email
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <CheckCircle2 className=" w-20 h-20 text-[#BAEF58] mx-auto" />
             <div className=" text-xl text-center mx-auto font-semibold tracking-wide">
               Transation Initiated Successfully
             </div>
