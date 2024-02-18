@@ -17,6 +17,9 @@ Discovery Donar revolutionizes academic funding by seamlessly connecting donors 
 3. Then they can simply select the amount and the token they want to send.
 4. Upon confirmation, they have to send emails to the relayers to process the transaction.
 
+<img width="918" alt="Screenshot 2024-02-18 at 9 54 32 PM" src="https://github.com/Dhruv-2003/Circuit-Breaker/assets/91938348/edf8bd6f-fb7e-4147-a6c8-6bea9ea088fc">
+
+
 ## How It's Made
 
 The project uses the "Email Wallet" function built by the zkemail team at EF. We utilize the Proof of email across the app, allowing users to do transactions just by sending an email. The email wallet validates the authenticity of emails through ZK Proof of DKIM signature, ensuring secure transactions without revealing sensitive information on-chain like their email addresses.
