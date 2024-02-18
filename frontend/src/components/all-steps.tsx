@@ -14,7 +14,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useDropzone } from "react-dropzone";
 import PdfViewer from "./pdf-viewer";
-import { getDocument, PDFDocumentProxy } from "pdfjs-dist";
+// import { getDocument, PDFDocumentProxy } from "pdfjs-dist";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { Card } from "./ui/card";
@@ -81,44 +81,44 @@ export default function AllSteps() {
     reader.onload = async () => {
       if (reader.result) {
         setFileData(reader.result as string | ArrayBuffer);
-        extractEmails(reader.result as string);
+        // extractEmails(reader.result as string);
       }
     };
     reader.readAsDataURL(acceptedFiles[0]);
   };
 
-  const extractEmails = async (content: string) => {
-    try {
-      const pdfContent = atob(content.split(",")[1]);
-      const pdfDocument = (await getDocument({ data: pdfContent })
-        .promise) as PDFDocumentProxy;
-      const numPages = pdfDocument.numPages;
-      let extractedEmails: string[] = [];
-      for (let i = 1; i <= numPages; i++) {
-        const page = await pdfDocument.getPage(i);
-        const textContent = await page.getTextContent();
-        textContent.items.forEach((item: any) => {
-          const text = item.str;
-          const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/g;
-          const matches = text.match(emailRegex);
-          if (matches) {
-            extractedEmails = extractedEmails.concat(matches);
-          }
-        });
-      }
-      setEmails(extractedEmails);
-      // setEmailPercentages(
-      //   extractedEmails.map((email) => ({ email, percentage: 100 }))
-      // );
-      const percentage =
-        extractedEmails.length > 1 ? 100 / extractedEmails.length : 100;
-      setEmailPercentages(
-        extractedEmails.map((email) => ({ email, percentage }))
-      );
-    } catch (error) {
-      console.error("Error extracting emails:", error);
-    }
-  };
+  // const extractEmails = async (content: string) => {
+  //   try {
+  //     const pdfContent = atob(content.split(",")[1]);
+  //     const pdfDocument = (await getDocument({ data: pdfContent })
+  //       .promise) as PDFDocumentProxy;
+  //     const numPages = pdfDocument.numPages;
+  //     let extractedEmails: string[] = [];
+  //     for (let i = 1; i <= numPages; i++) {
+  //       const page = await pdfDocument.getPage(i);
+  //       const textContent = await page.getTextContent();
+  //       textContent.items.forEach((item: any) => {
+  //         const text = item.str;
+  //         const emailRegex = /[\w\.-]+@[\w\.-]+\.\w+/g;
+  //         const matches = text.match(emailRegex);
+  //         if (matches) {
+  //           extractedEmails = extractedEmails.concat(matches);
+  //         }
+  //       });
+  //     }
+  //     setEmails(extractedEmails);
+  //     // setEmailPercentages(
+  //     //   extractedEmails.map((email) => ({ email, percentage: 100 }))
+  //     // );
+  //     const percentage =
+  //       extractedEmails.length > 1 ? 100 / extractedEmails.length : 100;
+  //     setEmailPercentages(
+  //       extractedEmails.map((email) => ({ email, percentage }))
+  //     );
+  //   } catch (error) {
+  //     console.error("Error extracting emails:", error);
+  //   }
+  // };
 
   const handlePercentageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
