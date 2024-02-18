@@ -1,10 +1,9 @@
-import UploadInput from "@/components/upload";
-import Image from "next/image";
+import AllSteps from "@/components/all-steps";
 
 export default function Home() {
   return (
-    <main className=" flex items-center justify-center h-full min-h-[80vh]">
-      <UploadInput />
+    <main className=" flex items-start justify-center h-full min-h-[80vh] py-20">
+      <AllSteps />
     </main>
   );
 }
